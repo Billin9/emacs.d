@@ -1,3 +1,8 @@
+;; TODO: https://wunki.org/posts/2014-05-17-haskell-packages-development.html
+;; https://github.com/chrisdone/chrisdone-emacs/blob/master/config/haskell.el
+;; TODO: ghci-ng
+;; TODO: don't pop up *Warnings* if haskell-stylish-on-save fails
+;; TODO: purescript-mode
 (require-package 'haskell-mode)
 
 
@@ -7,10 +12,8 @@
   (after-load 'haskell-mode
     (intero-global-mode)
     (add-hook 'haskell-mode-hook 'eldoc-mode))
-  (after-load 'haskell-cabal
-    (define-key haskell-cabal-mode-map (kbd "C-c C-l") 'intero-restart))
   (after-load 'intero
-    ;; Don't clobber sanityinc/counsel-search-project binding
+    ;; Don't clobber counsel-ag binding
     (define-key intero-mode-map (kbd "M-?") nil)
     (after-load 'flycheck
       (flycheck-add-next-checker 'intero
@@ -29,10 +32,12 @@
 
 (add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
 
-(when (maybe-require-package 'hindent)
-  (add-hook 'haskell-mode-hook 'hindent-mode)
-  (setq-default hindent-extra-args nil))
+(setq-default haskell-stylish-on-save t)
 
+(when (maybe-require-package 'hindent)
+  (add-hook 'haskell-mode-hook 'hindent-mode))
+
+(maybe-require-package 'hayoo)
 (after-load 'haskell-mode
   (define-key haskell-mode-map (kbd "C-c h") 'hoogle)
   (define-key haskell-mode-map (kbd "C-o") 'open-line))
@@ -41,9 +46,10 @@
 (after-load 'page-break-lines
   (push 'haskell-mode page-break-lines-modes))
 
-
-(when (maybe-require-package 'dhall-mode)
-  (add-hook 'dhall-mode-hook 'sanityinc/no-trailing-whitespace))
+
+(after-load 'haskell
+  (define-key interactive-haskell-mode-map (kbd "M-N") 'haskell-goto-next-error)
+  (define-key interactive-haskell-mode-map (kbd "M-P") 'haskell-goto-prev-error))
 
 
 (provide 'init-haskell)

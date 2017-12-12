@@ -75,7 +75,7 @@
 ;; ---------------------------------------------------------------------------
 
 (when (maybe-require-package 'js-comint)
-  (setq inferior-js-program-command "node")
+  (setq inferior-js-program-command "js")
 
   (defvar inferior-js-minor-mode-map (make-sparse-keymap))
   (define-key inferior-js-minor-mode-map "\C-x\C-e" 'js-send-last-sexp)

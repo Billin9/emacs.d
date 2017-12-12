@@ -3,17 +3,25 @@
 ;;; This file bootstraps the configuration, which is divided into
 ;;; a number of other files.
 
-(let ((minver "24.3"))
+(let ((minver "24.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "24.5")
+(when (version< emacs-version "24.4")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
+
+;;(when (eq system-type 'gnu/linux)
+;;  (setenv "HOME" "/root/.emacs.d")
+;;  (setenv "PATH" "/root/.emacs.d")
+;;  ;; set the default file path
+;;  (setq default-directory "/root/.emacs.d"))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking) ;; Measure startup time
 
-(defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
+(defconst *spell-check-support-enabled* t) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
+(defconst *is-a-linux* (eq system-type 'gnu/linux))
+(defconst *is-a-windows* (eq system-type 'windows-nt))
 
 ;;----------------------------------------------------------------------------
 ;; Adjust garbage collection thresholds during startup, and thereafter
@@ -51,7 +59,6 @@
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
-(require 'init-themes)
 (require 'init-osx-keys)
 (require 'init-gui-frames)
 (require 'init-dired)
@@ -73,6 +80,7 @@
 
 (require 'init-editing-utils)
 (require 'init-whitespace)
+(require 'init-fci)
 
 (require 'init-vc)
 (require 'init-darcs)
@@ -94,9 +102,9 @@
 (require 'init-html)
 (require 'init-css)
 (require 'init-haml)
-(require 'init-http)
 (require 'init-python-mode)
-(require 'init-haskell)
+(unless (version<= emacs-version "24.3")
+  (require 'init-haskell))
 (require 'init-elm)
 (require 'init-ruby-mode)
 (require 'init-rails)
@@ -110,8 +118,9 @@
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
-(require 'init-clojure)
-(require 'init-clojure-cider)
+(unless (version<= emacs-version "24.2")
+  (require 'init-clojure)
+  (require 'init-clojure-cider))
 (require 'init-common-lisp)
 
 (when *spell-check-support-enabled*
@@ -131,7 +140,28 @@
 (when *is-a-mac*
   (require-package 'osx-location))
 (maybe-require-package 'regex-tool)
-(maybe-require-package 'dotenv-mode)
+
+
+;;----------------------------------------------------------------------------
+;; Load my customs models @Bailm
+;;----------------------------------------------------------------------------
+;;(require 'init-sr-speedbar)  ;; 侧边文件栏
+;; (require 'init-smex)  ;; 命令提示
+(require 'init-evil-mode)  ;; vim模式
+(require 'init-auto-insert)  ;; 自定义对应文件后缀插入相应的文件头
+(require 'init-hot-key)  ;; 自定义快捷键
+;; (require 'init-tabbar)  ;; 在顶部显示标签
+(require 'init-swbuff)  ;; custom 切换buff
+(require 'init-unicad)  ;; 自动解决字符编码问题
+(require 'init-emmet)  ;; html简写
+(require 'init-count-words)  ;; 统计字数
+(if (file-exists-p "~/.emacs.d/lisp/init-mythemes.el")
+    (require 'init-mythemes)
+  (require 'init-themes))
+(require 'init-dos-mode)  ;; dos bat scripts mode
+(require 'init-spaceline)  ;; spaceline
+(require 'init-unindent)
+
 
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient
@@ -151,13 +181,20 @@
 ;;----------------------------------------------------------------------------
 ;; Allow users to provide an optional "init-local" containing personal settings
 ;;----------------------------------------------------------------------------
+;; (when (file-exists-p (expand-file-name "init-local.el" user-emacs-directory))
+;;   (error "Please move init-local.el to ~/.emacs.d/lisp"))
 (require 'init-local nil t)
 
 
 ;;----------------------------------------------------------------------------
 ;; Locales (setting them earlier in this file doesn't work in X)
 ;;----------------------------------------------------------------------------
-(require 'init-locales)
+(require 'init-locales)  ; my modifyed
+
+;; (add-hook 'after-init-hook
+;;           (lambda ()
+;;             (message "init completed in %.2fms"
+;;                      (sanityinc/time-subtract-millis after-init-time before-init-time))))
 
 
 (when (maybe-require-package 'uptimes)

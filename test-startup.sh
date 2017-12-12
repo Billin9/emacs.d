@@ -2,10 +2,11 @@
 if [ -n "$TRAVIS" ]; then
     # Make it look like this is ~/.emacs.d (needed for Emacs 24.3, at least)
     export HOME=$PWD/..
-    ln -s emacs.d ../.emacs.d
+    # ln -s emacs.d ../.emacs.d
 fi
 echo "Attempting startup..."
-${EMACS:=emacs} -nw --batch \
+#${EMACS:=emacs} -nw --batch \
+/e/works/software/Emacs/bin/emacs.exe -nw --batch \
                 --eval '(let ((debug-on-error t)
                               (url-show-status nil)
                               (user-emacs-directory default-directory)

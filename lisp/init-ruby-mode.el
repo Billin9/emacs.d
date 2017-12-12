@@ -13,6 +13,8 @@
  ruby-insert-encoding-magic-comment nil)
 
 (after-load 'ruby-mode
+  (define-key ruby-mode-map (kbd "TAB") 'indent-for-tab-command)
+
   ;; Stupidly the non-bundled ruby-mode isn't a derived mode of
   ;; prog-mode: we run the latter's hooks anyway in that case.
   (add-hook 'ruby-mode-hook
@@ -26,12 +28,6 @@
   (push 'ruby-mode page-break-lines-modes))
 
 (require-package 'rspec-mode)
-
-
-(define-derived-mode brewfile-mode ruby-mode "Brewfile"
-  "A major mode for Brewfiles, used by homebrew-bundle on MacOS.")
-
-(add-auto-mode 'brewfile-mode "Brewfile\\'")
 
 
 ;;; Inferior ruby
@@ -75,12 +71,6 @@
 (require-package 'bundler)
 
 
-(when (maybe-require-package 'yard-mode)
-  (add-hook 'ruby-mode-hook 'yard-mode)
-  (after-load 'yard-mode
-    (diminish 'yard-mode)))
-
-
 ;;; ERB
 (require-package 'mmm-mode)
 (defun sanityinc/ensure-mmm-erb-loaded ()
@@ -105,9 +95,7 @@
 
 (add-auto-mode 'html-erb-mode "\\.rhtml\\'" "\\.html\\.erb\\'")
 (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode))
-
 (mmm-add-mode-ext-class 'yaml-mode "\\.yaml\\(\\.erb\\)?\\'" 'erb)
-(sanityinc/set-up-mode-for-erb 'yaml-mode)
 
 (dolist (mode (list 'js-mode 'js2-mode 'js3-mode))
   (mmm-add-mode-ext-class mode "\\.js\\.erb\\'" 'erb))

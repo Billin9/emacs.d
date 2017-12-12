@@ -13,6 +13,11 @@
 (let ((versioned-package-dir
        (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
                          user-emacs-directory)))
+  (when (file-directory-p package-user-dir)
+    (message "Default package locations have changed in this config: renaming old package dir %s to %s."
+             package-user-dir
+             versioned-package-dir)
+    (rename-file package-user-dir versioned-package-dir))
   (setq package-user-dir versioned-package-dir))
 
 
@@ -33,6 +38,12 @@
                               "http://melpa.org/packages/"
                             "https://melpa.org/packages/")))
 
+;; @Bailm
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+;; need reomve melpa
+;; (add-to-list 'package-archives '("Shenzhen" . "http://elpa.popkit.org"))
 (unless sanityinc/no-ssl
   ;; Force SSL for GNU ELPA
   (setcdr (assoc "gnu" package-archives) "https://elpa.gnu.org/packages/"))
