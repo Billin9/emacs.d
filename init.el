@@ -90,7 +90,7 @@
 (require 'init-projectile)
 
 (require 'init-compile)
-;;(require 'init-crontab)
+(require 'init-crontab)
 (require 'init-textile)
 (require 'init-markdown)
 (require 'init-csv)
@@ -106,6 +106,7 @@
 (unless (version<= emacs-version "24.3")
   (require 'init-haskell))
 (require 'init-elm)
+(require 'init-purescript)
 (require 'init-ruby-mode)
 (require 'init-rails)
 (require 'init-sql)
@@ -113,7 +114,7 @@
 (require 'init-toml)
 (require 'init-yaml)
 (require 'init-docker)
-(maybe-require-package 'terraform-mode)
+(require 'init-terraform)
 
 (require 'init-paredit)
 (require 'init-lisp)
