@@ -50,9 +50,9 @@
   (setq fonts
         (cond (*is-a-mac*     '("Monaco"              "STHeiti"))
               (*is-a-linux*   '("Menlo"     "WenQuanYi Zen Hei"))
-              (*is-a-windows* '("Consolas"  "Microsoft Yahei"))))
+              (*is-a-windows* '("Consolas"  "Microsoft YaHei UI"))))
 
-  (setq face-font-rescale-alist '(("STHeiti" . 1.2) ("Microsoft Yahei" . 1.1) ("微软雅黑" . 1.1) ("WenQuanYi Zen Hei" . 1.2)))  ;; ("微软雅黑 or Microsoft Yahei" . 1.2)
+  (setq face-font-rescale-alist '(("STHeiti" . 1.2) ("Microsoft YaHei UI" . 1.1) ("微软雅黑" . 1.1) ("WenQuanYi Zen Hei" . 1.2)))  ;; ("微软雅黑 or Microsoft Yahei" . 1.2)
 
   (set-face-attribute 'default nil :font
                       (cond (*is-a-mac*       (format "%s:pixelsize=%d" (car fonts) 14))
