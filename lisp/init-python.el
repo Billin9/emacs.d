@@ -67,4 +67,4 @@
     (mmm-add-mode-ext-class mode "\\.py\\'" 'embedded-html)))
 
 
-(provide 'init-python-mode)
+(provide 'init-python)

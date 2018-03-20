@@ -35,7 +35,14 @@
 (setq-default haskell-stylish-on-save t)
 
 (when (maybe-require-package 'hindent)
-  (add-hook 'haskell-mode-hook 'hindent-mode))
+  (add-hook 'haskell-mode-hook 'hindent-mode)
+  (after-load 'hindent
+    (when (require 'nadvice)
+      (defun sanityinc/hindent--before-save-wrapper (oldfun &rest args)
+        (with-demoted-errors "Error invoking hindent: %s"
+          (let ((debug-on-error nil))
+            (apply oldfun args))))
+      (advice-add 'hindent--before-save :around 'sanityinc/hindent--before-save-wrapper))))
 
 (maybe-require-package 'hayoo)
 (after-load 'haskell-mode
