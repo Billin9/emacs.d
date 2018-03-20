@@ -14,8 +14,5 @@
   (after-load 'dired
     (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
 
-;; Dired+ Reuse Directory Buffer @Bailm
-(toggle-diredp-find-file-reuse-dir 1)
-
 
 (provide 'init-dired)
