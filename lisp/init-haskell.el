@@ -54,9 +54,28 @@
   (push 'haskell-mode page-break-lines-modes))
 
 
-(after-load 'haskell
-  (define-key interactive-haskell-mode-map (kbd "M-N") 'haskell-goto-next-error)
-  (define-key interactive-haskell-mode-map (kbd "M-P") 'haskell-goto-prev-error))
+
+(define-minor-mode stack-exec-path-mode
+  "If this is a stack project, set `exec-path' to the path \"stack exec\" would use."
+  nil
+  :lighter ""
+  :global nil
+  (if stack-exec-path-mode
+      (when (and (executable-find "stack")
+                 (locate-dominating-file default-directory "stack.yaml"))
+        (setq-local
+         exec-path (parse-colon-path
+                    (replace-regexp-in-string "[\r\n]+\\'" ""
+                                              (shell-command-to-string "stack path --bin-path")))))
+    (kill-local-variable 'exec-path)))
+
+(add-hook 'haskell-mode-hook 'stack-exec-path-mode)
+
+
+
+(when (maybe-require-package 'dhall-mode)
+  (add-hook 'dhall-mode-hook 'sanityinc/no-trailing-whitespace)
+  (add-hook 'dhall-mode-hook 'stack-exec-path-mode))
 
 
 (provide 'init-haskell)
