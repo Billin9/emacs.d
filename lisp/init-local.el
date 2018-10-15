@@ -27,13 +27,14 @@
 (setq default-buffer-file-coding-system 'utf-8)
 (setq current-language-environment "UTF-8")
 (set-language-environment "UTF-8")
-(unless (eq system-type 'windows-nt)
+;; (unless (eq system-type 'windows-nt)
+(when *is-a-windows*
+  (set-w32-system-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8))
 (setq locale-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(set-w32-system-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;   支持从外部粘贴中文
@@ -86,6 +87,9 @@
 ;;----------------------------------------------------------------------------
 ;; 缓冲区
 ;;----------------------------------------------------------------------------
+
+;;使用右键打开文件的时候不打开新窗口
+(setq ns-pop-up-frames nil)
 
 ;;设定行距
 (setq line-spacing 0)
@@ -248,7 +252,7 @@
 ;; 颜色设置
 
 ;; 指针颜色
-;; (set-cursor-color "black")
+(set-cursor-color "white")
 
 ;; 鼠标颜色
 ;; (set-mouse-color "black")

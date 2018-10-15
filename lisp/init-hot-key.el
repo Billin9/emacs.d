@@ -31,7 +31,7 @@
 ;;切换到其它window f1 ;; c-x o
 (global-set-key (kbd "<f1>") 'switch-window)
 ;;
-(global-set-key (kbd "<M-f1>") 'sanityinc/split-window)
+;; (global-set-key (kbd "<M-f1>") 'sanityinc/split-window)
 
 ;; 切换到dired模式 F2
 (global-set-key [(f2)] 'dired)
@@ -40,13 +40,17 @@
 (global-set-key [(f3)] 'find-file)
 ;;以分割缓冲区打开文件 M-F3
 (global-set-key [(M-f3)] 'ido-find-file-other-window)
-;;以分割缓冲区打开buffer M-B
-(global-set-key "\C-xB" 'ido-switch-buffer-other-window)
 
-;;关闭buffer和同一buffer内的所有window F4
-(global-set-key [(f4)] 'kill-buffer-and-window)
+;; switch buffer
+(global-set-key [(f8)] 'ivy-switch-buffer)
+;; 以分割缓冲区打开buffer M-B
+;; (global-set-key "\C-xB" 'ido-switch-buffer-other-window)
+(global-set-key [(M-f8)] 'ido-switch-buffer-other-window)
+
+;;kill current window, kill buffer if current window is only one
+(global-set-key [(f4)] 'delete-window-maybe-kill-buffer)
 ;;关闭当前window M-F4  ;; C-x 0
-(global-set-key [(M-f4)] 'delete-window)
+;; (global-set-key [(M-f4)] 'delete-window)
 
 ;;关闭其它window Alt+1  ;; C-x 1
 (global-set-key "\M-1" 'delete-other-windows)
@@ -68,7 +72,7 @@
 ;; F3：切换到shell模式
 ;;(global-set-key [(f3)] 'ansi-term)
 
-;; F4:关闭buffer
+;; F4:关闭buffer和同一buffer内的所有window (old)
 ;;(global-set-key [(f4)] 'kill-buffer-and-window)
 
 ;; F5：打开speedbar
@@ -142,11 +146,11 @@
 
 
 ;;----------------------------------------------------------------------------
-;; wcy-swbuff.el  用 Ctrl-Left Right 来切换窗口
+;; wcy-swbuff.el  用 <C-M-s-left> <C-M-s-right> 来切换窗口
 ;;----------------------------------------------------------------------------
 ;; then you can use <C-tab> and <C-S-kp-tab> to switch buffer.
-;; (global-set-key (kbd "<C-left>") 'wcy-switch-buffer-forward)
-;; (global-set-key (kbd "<C-right>") 'wcy-switch-buffer-backward)
+(global-set-key (kbd "<C-M-s-left>") 'wcy-switch-buffer-forward)
+(global-set-key (kbd "<C-M-s-right>") 'wcy-switch-buffer-backward)
 
 
 ;;----------------------------------------------------------------------------
@@ -180,8 +184,8 @@
 ;; Mac meta key set
 ;;----------------------------------------------------------------------------
 (when *is-a-mac*
-  (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta))
+  (setq mac-command-modifier 'super)
+  (setq mac-option-modifier 'meta))
 
 
 
@@ -239,6 +243,86 @@
         (t (save-excursion
              (ignore-errors (backward-up-list))
              (funcall fn)))))
+
+
+;;----------------------------------------------------------------------------
+;; 删除 buffer 和 window.
+;;----------------------------------------------------------------------------
+(defun delete-window-maybe-kill-buffer ()
+  "Delete selected window.
+If no other window shows its buffer, kill the buffer too."
+  (interactive)
+  (let* ((selwin (selected-window))
+         (buf (window-buffer selwin)))
+    (if (> (length (window-list)) 1)
+        (delete-window selwin)
+      (unless (get-buffer-window buf 'visible) (kill-buffer buf))
+      (kill-buffer buf))))
+
+
+;;----------------------------------------------------------------------------
+;; org-mode 格式化 list
+;;----------------------------------------------------------------------------
+(defun org-adjust-region (b e)
+  "Re-adjust stuff in region according to the preceeding stuff."
+  (interactive "r") ;; current region
+  (save-excursion
+    (let ((e (set-marker (make-marker) e))
+          (_indent (lambda ()
+                     (insert ?\n)
+                     (backward-char)
+                     (org-indent-line)
+                     (delete-char 1)))
+          last-item-pos)
+      (goto-char b)
+      (beginning-of-line)
+      (while (< (point) e)
+        (indent-line-to 0)
+        (cond
+         ((looking-at "[[:space:]]*$")) ;; ignore empty lines
+         ((org-at-heading-p)) ;; just leave the zero-indent
+         ((org-at-item-p)
+          (funcall _indent)
+          (let ((struct (org-list-struct))
+                (mark-active nil))
+            (ignore-errors (org-list-indent-item-generic -1 t struct)))
+          (setq last-item-pos (point))
+          (when current-prefix-arg
+            (fill-paragraph)))
+         ((org-at-block-p)
+          (funcall _indent)
+          (goto-char (plist-get (cadr (org-element-special-block-parser e nil)) :contents-end))
+          (org-indent-line))
+         (t (funcall _indent)))
+        (forward-line))
+      (when last-item-pos
+        (goto-char last-item-pos)
+        (org-list-repair)
+        ))))
+
+(after-load 'org
+  (define-key org-mode-map (kbd "C-+") 'org-adjust-region))
+
+
+;;----------------------------------------------------------------------------
+;; 保存文本时自动更新 buffer 头部的版本日期
+;;----------------------------------------------------------------------------
+(defun update-version ()
+  "更新脚本头部的版本日期"
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "^\\(#*Version:    \\).*" nil t)
+    (replace-match (format "\\1%s" (format-time-string "%Y.%m.%d")))))
+
+(defun my-after-save-actions ()
+  "Used in `before-save-hook'."
+  (when '(save-buffer save-some-buffers)
+    (if (member (file-name-extension (buffer-file-name)) '("sh" "py"))
+        (if (yes-or-no-p "Update Version?")
+            (update-version)))))
+
+(add-hook 'before-save-hook 'my-after-save-actions)
+;; (add-hook 'after-save-hook 'my-after-save-actions)
 
 
 (provide 'init-hot-key)

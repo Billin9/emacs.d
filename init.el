@@ -171,7 +171,7 @@
 (if (file-exists-p "~/.emacs.d/lisp/init-mythemes.el")
     (require 'init-mythemes)
   (require 'init-themes))
-(require 'init-dos-mode)  ;; dos bat scripts mode
+;; (require 'init-dos-mode)  ;; dos bat scripts mode
 (require 'init-spaceline)  ;; spaceline
 (require 'init-unindent)
 

@@ -31,10 +31,10 @@
   ;;       ;; sh-mode
   ;;       (("\\.sh\\'" . "Shell-Script skeleton")
   ;;        "Short description: "
-  ;;        "#!/bin/sh\n\n"
+  ;;        "#!/bin/bash\n\n"
   ;;        "# ===============================\n"
   ;;        "# Desc:    " str "\n"
-  ;;        "# Author:  " (getenv-internal "USERNAME") | (progn user-name) "\n"
+  ;;        "# Author:  " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
   ;;        "# Version: " (format-time-string "%Y.%m.%d") "\n"
   ;;        "# ===============================\n\n\n\n\n\n"
   ;;        "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
@@ -47,7 +47,7 @@
   ;;        "#!/usr/bin/env python\n"
   ;;        "# coding=utf-8\n\n\"\"\"\n"
   ;;        "Desc:    " str "\n"
-  ;;        "Author:  " (getenv-internal "USERNAME") | (progn user-name) "\n"
+  ;;        "Author:  " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
   ;;        "Version: " (format-time-string "%Y.%m.%d") "\n\"\"\"\n\n\n\n\n\n"
   ;;        "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
   ;;       )
@@ -274,12 +274,14 @@ The document was typeset with
 ;; sh-mode
 (("\\.sh\\'" . "Shell-Script skeleton")
  "Short description: "
- "#!/bin/sh\n\n"
- "# ===============================\n"
- "# Created on  " (format-time-string "%Y-%m-%d %H:%M:%S") "\n"
- "# Author:     " (getenv-internal "USERNAME") | (progn user-name) "\n"
- "# Version:    " (format-time-string "%Y.%m.%d") "\n"
- "# ===============================\n\n\n\n\n\n"
+ "#!/bin/bash\n"
+ "#########################################\n"
+ "#Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
+ "#Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
+ "#Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
+ "#Company:    ZOS Inc.\n"
+ "#Version:    " (format-time-string "%Y.%m.%d") "\n"
+ "#########################################\n\n\n\n\n\n"
  "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
 
 ;; (define-auto-insert 'python-mode '(nil "#!/usr/bin/env python\n# onding=utf-8n\n"))
@@ -288,9 +290,11 @@ The document was typeset with
 (("\\.py\\'" . "Python skeleton")
  "Short description: "
  "#!/usr/bin/env python\n"
- "# coding=utf-8\n\n\"\"\"\n"
- "Created on  " (format-time-string "%Y-%m-%d %H:%M:%S") "\n"
- "Author:     " (getenv-internal "USERNAME") | (progn user-name) "\n"
+ "# coding=utf-8\n\"\"\"\n"
+ "Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
+ "Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
+ "Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
+ "Company:    ZOS Inc.\n"
  "Version:    " (format-time-string "%Y.%m.%d") "\n\"\"\"\n\n\n\n\n\n"
  "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
 )

@@ -69,8 +69,8 @@ or expand the word preceding point. "
       (unindent-block)
     (if(not(bolp))(delete-backward-char 4 ))))
 
-;; (global-set-key (kbd "M-i") 'my-unindent)
-(global-set-key (kbd "M-i") 'decrease-left-margin)
+(global-set-key (kbd "M-i") 'my-unindent)
+;; (global-set-key (kbd "M-i") 'decrease-left-margin)
 
 (add-hook 'find-file-hooks (function (lambda ()
                                        (unless (eq major-mode 'org-mode)
