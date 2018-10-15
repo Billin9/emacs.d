@@ -14,4 +14,6 @@ ${EMACS:=emacs} -nw --batch \
                               (load-path (delq default-directory load-path)))
                            (load-file user-init-file)
                            (run-hooks (quote after-init-hook)))'
+git remote add upstream git@github.com:purcell/emacs.d.git
+git fetch upstream
 echo "Startup successful"
