@@ -1,8 +1,8 @@
 (when (maybe-require-package 'elm-mode)
   (after-load 'elm-mode
     (diminish 'elm-indent-mode)
-    (when (executable-find "elm-oracle")
-      (add-hook 'elm-mode-hook 'elm-oracle-setup-completion))
+    (after-load 'company
+      (push 'company-elm company-backends))
     (when (executable-find "elm-format")
       (setq-default elm-format-on-save t)))
   (maybe-require-package 'elm-test-runner)

@@ -13,8 +13,8 @@
                  'anaconda-mode-show-unreadable-response))
   (when (maybe-require-package 'company-anaconda)
     (after-load 'company
-      (add-hook 'python-mode-hook
-                (lambda () (sanityinc/local-push-company-backend 'company-anaconda))))))
+      (after-load 'python
+        (push 'company-anaconda company-backends)))))
 
 ;; Embedding in python @Bailm
 (require-package 'mmm-mode)
