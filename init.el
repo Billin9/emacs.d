@@ -173,6 +173,7 @@
 ;; (require 'init-dos-mode)  ;; dos bat scripts mode
 (require 'init-spaceline)  ;; spaceline
 (require 'init-unindent)
+(require 'init-highlight-indent-guides)
 
 
 ;;----------------------------------------------------------------------------
