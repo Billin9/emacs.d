@@ -69,8 +69,8 @@ or expand the word preceding point. "
       (unindent-block)
     (if(not(bolp))(delete-backward-char 4 ))))
 
-(global-set-key (kbd "M-i") 'my-unindent)
-;; (global-set-key (kbd "M-i") 'decrease-left-margin)
+;; (global-set-key (kbd "M-i") 'my-unindent)
+(global-set-key (kbd "M-i") 'decrease-left-margin)
 
 (add-hook 'find-file-hooks (function (lambda ()
                                        (unless (eq major-mode 'org-mode)
@@ -79,8 +79,7 @@ or expand the word preceding point. "
 (if (not (eq  major-mode 'org-mode))
     (progn
       ;; (define-key global-map "\t" 'indent-or-complete) ;; with this you have to force tab (C-q-tab) to insert a tab after a word
-      (define-key global-map [S-tab] 'my-unindent)
-      (define-key global-map [C-S-tab] 'my-unindent)))
+      (define-key global-map [S-tab] 'decrease-left-margin)))
 
 ;; mac and pc users would like selecting text this way
 (defun dave-shift-mouse-select (event)
@@ -105,6 +104,34 @@ or expand the word preceding point. "
 ;; this final line is only necessary to escape the *scratch* fundamental-mode
 ;; and let this demonstration work
 ;; (text-mode)
+
+
+;; new indent
+;; https://gist.github.com/aleiphoenix/5464766
+(defun shift-text (distance)
+  (if (use-region-p)
+      (let ((mark (mark)))
+        (save-excursion
+          (indent-rigidly (region-beginning)
+                          (region-end)
+                          distance)
+          (push-mark mark t t)
+          (setq deactivate-mark nil)))
+    (indent-rigidly (line-beginning-position)
+                    (line-end-position)
+                    distance)))
+
+(defun shift-right (count)
+  (interactive "p")
+  (shift-text count))
+
+(defun shift-left (count)
+  (interactive "p")
+  (shift-text (- count)))
+
+(global-set-key (kbd "C-x >") (lambda () (interactive) (shift-right 4)))
+(global-set-key (kbd "C-x <") (lambda () (interactive) (shift-left 4)))
+;; (global-set-key (kbd "<S-tab>") (lambda () (interactive) (shift-left 4)))
 
 
 (provide 'init-unindent)
