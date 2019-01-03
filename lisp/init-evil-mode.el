@@ -55,5 +55,11 @@
 ;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
 ;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
+;;----------------------------------------------------------------------------
+;; vim 的自动补全
+;;----------------------------------------------------------------------------
+(define-key evil-insert-state-map (kbd "C-n") 'evil-complete-next)
+(define-key evil-insert-state-map (kbd "C-p") 'evil-complete-previous)
+
 
 (provide 'init-evil-mode)
