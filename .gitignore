@@ -50,3 +50,5 @@ site-lisp/package/
 backup
 server
 /magithub
+.cache/
+/forge-database.sqlite

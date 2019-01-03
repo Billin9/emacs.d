@@ -1,3 +1,7 @@
+;;; init-hippie-expand.el --- Settings for hippie-expand -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (global-set-key (kbd "M-/") 'hippie-expand)
 
 ;; Modify by Bailm
@@ -19,3 +23,4 @@
 
 
 (provide 'init-hippie-expand)
+;;; init-hippie-expand.el ends here

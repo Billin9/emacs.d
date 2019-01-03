@@ -1,3 +1,7 @@
+;;; init-clojure-cider.el --- Cider support for clojure -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (require 'init-clojure)
 
 (when (maybe-require-package 'cider)
@@ -17,3 +21,4 @@
 
 
 (provide 'init-clojure-cider)
+;;; init-clojure-cider.el ends here

@@ -1,3 +1,7 @@
+;;; init-isearch.el --- isearch settings -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 ;; Show number of matches while searching
 (when (maybe-require-package 'anzu)
   (global-anzu-mode t)
@@ -43,3 +47,4 @@ This is useful when followed by an immediate kill."
 
 
 (provide 'init-isearch)
+;;; init-isearch.el ends here

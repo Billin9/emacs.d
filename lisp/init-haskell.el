@@ -1,8 +1,7 @@
-;; TODO: https://wunki.org/posts/2014-05-17-haskell-packages-development.html
-;; https://github.com/chrisdone/chrisdone-emacs/blob/master/config/haskell.el
-;; TODO: ghci-ng
-;; TODO: don't pop up *Warnings* if haskell-stylish-on-save fails
-;; TODO: purescript-mode
+;;; init-haskell.el --- Support the Haskell language -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (require-package 'haskell-mode)
 
 
@@ -89,3 +88,4 @@
 
 
 (provide 'init-haskell)
+;;; init-haskell.el ends here
