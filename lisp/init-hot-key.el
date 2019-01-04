@@ -177,7 +177,7 @@
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
-;; (global-set-key "\M-;" 'my-comment-or-uncomment-region)
+(global-set-key "\M-;" 'my-comment-or-uncomment-region)
 
 
 ;;----------------------------------------------------------------------------
