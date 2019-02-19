@@ -6,7 +6,6 @@ if [ -n "$TRAVIS" ]; then
 fi
 echo "Attempting startup..."
 ${EMACS:=emacs} -nw --batch \
-#/e/works/software/Emacs/bin/emacs.exe -nw --batch \
                 --eval '(let ((debug-on-error t)
                               (url-show-status nil)
                               (user-emacs-directory default-directory)
@@ -14,6 +13,6 @@ ${EMACS:=emacs} -nw --batch \
                               (load-path (delq default-directory load-path)))
                            (load-file user-init-file)
                            (run-hooks (quote after-init-hook)))'
-git remote add upstream git@github.com:purcell/emacs.d.git
-git fetch upstream
+#git remote add upstream git@github.com:purcell/emacs.d.git
+#git fetch upstream
 echo "Startup successful"
