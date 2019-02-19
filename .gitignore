@@ -52,3 +52,4 @@ server
 /magithub
 .cache/
 /forge-database.sqlite
+/transient

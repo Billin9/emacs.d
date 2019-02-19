@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;; -*- lexical-binding: t -*-
 (require-package 'unfill)
 
 (when (fboundp 'electric-pair-mode)
@@ -61,6 +60,13 @@
 (require-package 'mode-line-bell)
 (add-hook 'after-init-hook 'mode-line-bell-mode)
 
+
+
+(when (maybe-require-package 'beacon)
+  (setq-default beacon-lighter "")
+  (setq-default beacon-size 20)
+  (add-hook 'after-init-hook 'beacon-mode))
+
 
 
 ;;; Newline behaviour
@@ -83,8 +89,8 @@
 
 
 
-(unless (fboundp 'display-line-numbers-mode)
-  (require-package 'nlinum))
+(when (fboundp 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode))
 
 
 (when (require-package 'rainbow-delimiters)
