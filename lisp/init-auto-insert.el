@@ -279,7 +279,7 @@ The document was typeset with
  "#Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
  "#Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
  "#Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
- "#Company:    ZOS Inc.\n"
+ "#Company:    DoSec Inc.\n"
  "#Version:    " (format-time-string "%Y.%m.%d") "\n"
  "#########################################\n\n\n\n\n\n"
  "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
@@ -294,7 +294,7 @@ The document was typeset with
  "Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
  "Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
  "Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
- "Company:    ZOS Inc.\n"
+ "Company:    DoSec Inc.\n"
  "Version:    " (format-time-string "%Y.%m.%d") "\n\"\"\"\n\n\n\n\n\n"
  "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
 )
