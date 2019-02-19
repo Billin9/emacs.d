@@ -26,20 +26,19 @@
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   ;; Official MELPA Mirror, in case necessary.
   ;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
-  ;; (if (< emacs-major-version 24)
+  (if (< emacs-major-version 24)
       ;; For important compatibility libraries like cl-lib
-      ;; (add-to-list 'package-archives '("gnu" . (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-    ;; (unless no-ssl
+      (add-to-list 'package-archives '("gnu" . (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+    (unless no-ssl
       ;; Force SSL for GNU ELPA
-      ;; (setcdr (assoc "gnu" package-archives) "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-      )
+      (setcdr (assoc "gnu" package-archives) "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))))
 
 ;; We include the org repository for completeness, but don't normally
 ;; use it.
-;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 ;; @Bailm
-(add-to-list 'package-archives '("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+;; (add-to-list 'package-archives '("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
