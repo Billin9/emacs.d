@@ -137,44 +137,20 @@ _
      (replace-match (capitalize (user-login-name)) t t))
 '(end-of-line 1) " <" (progn user-mail-address) ">\n")
 
-(("\\.el\\'" . "Emacs Lisp header")
- "Short description: "
- ";;; " (file-name-nondirectory (buffer-file-name)) " --- " str
- (make-string (max 2 (- 80 (current-column) 27)) ?\s)
- "-*- lexical-binding: t; -*-" '(setq lexical-binding t)
- "
+      (("\\.el\\'" . "Emacs Lisp header")
+       "Short description: "
+       ";;; " (file-name-nondirectory (buffer-file-name)) " --- " str
+       (make-string (max 2 (- 80 (current-column) 27)) ?\s)
+       "-*- lexical-binding: t; -*-" '(setq lexical-binding t)
+       "
 
-;; Copyright (C) " (format-time-string "%Y") ""
-                                             (getenv "ORGANIZATION") | (progn user-full-name) "
+;; Copyright (C) " (format-time-string "%Y") " "
+       (getenv "ORGANIZATION") | (progn user-full-name) "
 
 ;; Author: " (user-full-name)
-             '(if (search-backward "&" (line-beginning-position) t)
-                  (replace-match (capitalize (user-login-name)) t t))
-             '(end-of-line 1) " <" (progn user-mail-address) ">
-;; Keywords: "
-             '(require 'finder)
-             ;;'(setq v1 (apply 'vector (mapcar 'car finder-known-keywords)))
-             '(setq v1 (mapcar (lambda (x) (list (symbol-name (car x))))
-                               finder-known-keywords)
-                    v2 (mapconcat (lambda (x) (format "%12s:  %s" (car x) (cdr x)))
-                                  finder-known-keywords
-                                  "\n"))
-             ((let ((minibuffer-help-form v2))
-                (completing-read "Keyword, C-h: " v1 nil t))
-              str ", ") & -2 "
-
-\;; This program is free software; you can redistribute it and/or modify
-\;; it under the terms of the GNU General Public License as published by
-\;; the Free Software Foundation, either version 3 of the License, or
-\;; (at your option) any later version.
-
-\;; This program is distributed in the hope that it will be useful,
-\;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-\;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-\;; GNU General Public License for more details.
-
-\;; You should have received a copy of the GNU General Public License
-\;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+       '(if (search-backward "&" (line-beginning-position) t)
+            (replace-match (capitalize (user-login-name)) t t))
+       '(end-of-line 1) " <" (progn user-mail-address) ">
 
 \;;; Commentary:
 
@@ -185,22 +161,22 @@ _
 
 
 \(provide '"
-(file-name-base)
-")
+       (file-name-base)
+       ")
 \;;; " (file-name-nondirectory (buffer-file-name)) " ends here\n")
-(("\\.texi\\(nfo\\)?\\'" . "Texinfo file skeleton")
- "Title: "
- "\\input texinfo   @c -*-texinfo-*-
+      (("\\.texi\\(nfo\\)?\\'" . "Texinfo file skeleton")
+       "Title: "
+       "\\input texinfo   @c -*-texinfo-*-
 @c %**start of header
 @setfilename "
- (file-name-base) ".info\n"
- "@settitle " str "
+       (file-name-base) ".info\n"
+       "@settitle " str "
 @c %**end of header
 @copying\n"
- (setq short-description (read-string "Short description: "))
- ".\n\n"
- "Copyright @copyright{} " (format-time-string "%Y") "  "
- (getenv "ORGANIZATION") | (progn user-full-name) "
+       (setq short-description (read-string "Short description: "))
+       ".\n\n"
+       "Copyright @copyright{} " (format-time-string "%Y") "  "
+       (getenv "ORGANIZATION") | (progn user-full-name) "
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -224,7 +200,7 @@ The document was typeset with
 @title " str "
 @subtitle " short-description "
 @author " (getenv "ORGANIZATION") | (progn user-full-name)
-" <" (progn user-mail-address) ">
+       " <" (progn user-mail-address) ">
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -270,35 +246,35 @@ The document was typeset with
 
 @c " (file-name-nondirectory (buffer-file-name)) " ends here\n")
 
-;; (define-auto-insert 'sh-mode '(nil "#!/bin/bash\n\n"))
-;; sh-mode
-(("\\.sh\\'" . "Shell-Script skeleton")
- "Short description: "
- "#!/bin/bash\n"
- "#########################################\n"
- "#Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
- "#Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
- "#Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
- "#Company:    DoSec Inc.\n"
- "#Version:    " (format-time-string "%Y.%m.%d") "\n"
- "#########################################\n\n\n\n\n\n"
- "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
+      ;; (define-auto-insert 'sh-mode '(nil "#!/bin/bash\n\n"))
+      ;; sh-mode
+      (("\\.sh\\'" . "Shell-Script skeleton")
+       "Short description: "
+       "#!/bin/bash\n"
+       "#########################################\n"
+       "#Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
+       "#Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
+       "#Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
+       "#Company:    DoSec Inc.\n"
+       "#Version:    " (format-time-string "%Y.%m.%d") "\n"
+       "#########################################\n\n\n\n\n\n"
+       "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
 
-;; (define-auto-insert 'python-mode '(nil "#!/usr/bin/env python\n# onding=utf-8n\n"))
-;; Python-mode
-;; "Created on " (format-time-string "%Y-%m-%d %H:%M:%S %a.") "\n\n"
-(("\\.py\\'" . "Python skeleton")
- "Short description: "
- "#!/usr/bin/env python\n"
- "# coding=utf-8\n\"\"\"\n"
- "Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
- "Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
- "Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
- "Company:    DoSec Inc.\n"
- "Version:    " (format-time-string "%Y.%m.%d") "\n\"\"\"\n\n\n\n\n\n"
- "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
-)
-"A list specifying text to insert by default into a new file.
+      ;; (define-auto-insert 'python-mode '(nil "#!/usr/bin/env python\n# onding=utf-8n\n"))
+      ;; Python-mode
+      ;; "Created on " (format-time-string "%Y-%m-%d %H:%M:%S %a.") "\n\n"
+      (("\\.py\\'" . "Python skeleton")
+       "Short description: "
+       "#!/usr/bin/env python\n"
+       "# coding=utf-8\n\"\"\"\n"
+       "Created on  " (format-time-string "%Y.%m.%d %H:%M:%S") "\n"
+       "Usage:      ./" (file-name-nondirectory (buffer-file-name)) "\n"
+       "Author:     " (getenv-internal "USERNAME") | (progn user-full-name) "\n"
+       "Company:    DoSec Inc.\n"
+       "Version:    " (format-time-string "%Y.%m.%d") "\n\"\"\"\n\n\n\n\n\n"
+       "# --- " (file-name-nondirectory (buffer-file-name)) " --- ends here\n")
+      )
+    "A list specifying text to insert by default into a new file.
 Elements look like (CONDITION . ACTION) or ((CONDITION . DESCRIPTION) . ACTION).
 CONDITION may be a regexp that must match the new file's name, or it may be
 a symbol that must match the major mode for this element to apply.
@@ -308,19 +284,19 @@ ACTION may be a skeleton to insert (see `skeleton-insert'), an absolute
 file-name or one relative to `auto-insert-directory' or a function to call.
 ACTION may also be a vector containing several successive single actions as
 described above, e.g. [\"header.insert\" date-and-author-update]."
-:type '(alist :key-type
-(choice (regexp :tag "Regexp matching file name")
-        (symbol :tag "Major mode")
-        (cons :tag "Condition and description"
-              (choice :tag "Condition"
-                      (regexp :tag "Regexp matching file name")
-                      (symbol :tag "Major mode"))
-              (string :tag "Description")))
-;; There's no custom equivalent of "repeat" for vectors.
-:value-type (choice file function
-                    (sexp :tag "Skeleton or vector")))
-:version "2016.12.10"
-:group 'auto-insert))
+    :type '(alist :key-type
+                  (choice (regexp :tag "Regexp matching file name")
+                          (symbol :tag "Major mode")
+                          (cons :tag "Condition and description"
+                                (choice :tag "Condition"
+                                        (regexp :tag "Regexp matching file name")
+                                        (symbol :tag "Major mode"))
+                                (string :tag "Description")))
+                  ;; There's no custom equivalent of "repeat" for vectors.
+                  :value-type (choice file function
+                                      (sexp :tag "Skeleton or vector")))
+    :version "2016.12.10"
+    :group 'auto-insert))
 
 
 (add-hook 'find-file-hooks 'auto-insert)
