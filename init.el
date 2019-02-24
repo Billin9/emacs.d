@@ -179,6 +179,8 @@
 (require 'init-unindent)
 (require 'init-highlight-indent-guides)
 (require 'init-awesome-tab)
+(require 'init-groovy-mode)
+
 
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient
