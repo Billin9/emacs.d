@@ -178,7 +178,7 @@
 (require 'init-spaceline)  ;; spaceline
 (require 'init-unindent)
 (require 'init-highlight-indent-guides)
-
+(require 'init-awesome-tab)
 
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient

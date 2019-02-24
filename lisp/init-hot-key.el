@@ -149,8 +149,8 @@
 ;; wcy-swbuff.el  用 <C-M-s-left> <C-M-s-right> 来切换窗口
 ;;----------------------------------------------------------------------------
 ;; then you can use <C-tab> and <C-S-kp-tab> to switch buffer.
-(global-set-key (kbd "<C-M-s-left>") 'wcy-switch-buffer-forward)
-(global-set-key (kbd "<C-M-s-right>") 'wcy-switch-buffer-backward)
+;; (global-set-key (kbd "<C-M-s-left>") 'wcy-switch-buffer-forward)
+;; (global-set-key (kbd "<C-M-s-right>") 'wcy-switch-buffer-backward)
 
 
 ;;----------------------------------------------------------------------------
