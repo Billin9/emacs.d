@@ -318,8 +318,8 @@ If no other window shows its buffer, kill the buffer too."
   "Used in `before-save-hook'."
   (when '(save-buffer save-some-buffers)
     (if (member (file-name-extension (buffer-file-name)) '("sh" "py"))
-        (if (yes-or-no-p "Update Version?")
-            (update-version)))))
+        ;; (if (yes-or-no-p "Update Version?")
+        (update-version))))
 
 (add-hook 'before-save-hook 'my-after-save-actions)
 ;; (add-hook 'after-save-hook 'my-after-save-actions)
