@@ -12,9 +12,6 @@
 (when (maybe-require-package 'anaconda-mode)
   (after-load 'python
     (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-    (remove-hook 'anaconda-mode-response-read-fail-hook
-                 'anaconda-mode-show-unreadable-response))
     (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
   (after-load 'anaconda-mode
     (define-key anaconda-mode-map (kbd "M-?") nil))
