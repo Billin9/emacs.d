@@ -2,74 +2,42 @@
 ;;; Commentary:
 ;;; Code:
 
+;; I use nix + direnv instead of virtualenv/pyenv/pyvenv, and it is an
+;; approach which extends to other languages too. I recorded a
+;; screencast about this: https://www.youtube.com/watch?v=TbIHRHy7_JM
+
+
 (setq auto-mode-alist
       (append '(("SConstruct\\'" . python-mode)
                 ("SConscript\\'" . python-mode))
               auto-mode-alist))
 
+(setq python-shell-interpreter "python3")
+
 (require-package 'pip-requirements)
 
 (when (maybe-require-package 'anaconda-mode)
-  (after-load 'python
-    (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
-  (after-load 'anaconda-mode
+  (with-eval-after-load 'python
+    ;; Anaconda doesn't work on remote servers without some work, so
+    ;; by default we enable it only when working locally.
+    (add-hook 'python-mode-hook
+              (lambda () (unless (file-remote-p default-directory)
+                           (anaconda-mode 1))))
+    (add-hook 'anaconda-mode-hook
+              (lambda ()
+                (anaconda-eldoc-mode (if anaconda-mode 1 0)))))
+  (with-eval-after-load 'anaconda-mode
     (define-key anaconda-mode-map (kbd "M-?") nil))
   (when (maybe-require-package 'company-anaconda)
-    (after-load 'company
-      (after-load 'python
-        (push 'company-anaconda company-backends)))))
+    (with-eval-after-load 'company
+      (with-eval-after-load 'python
+        (add-to-list 'company-backends 'company-anaconda)))))
 
-;; Embedding in python @Bailm
-(require-package 'mmm-mode)
-(after-load 'mmm-vars
-  (mmm-add-group
-   'embedded-html
-   '(;; html mode ----------------------------------------------------
-     (html
-      :submode html-mode
-      :face mmm-code-submode-face
-      :front "<html[^>]*>[ \t]*\n?"
-      :back "[ \t]*</html>"
-      :include-front t
-      :include-back t)
-     ;; css mode ----------------------------------------------------
-     (css-cdata
-      :submode css-mode
-      :face mmm-code-submode-face
-      :front "<style[^>]*>[ \t\n]*\\(//\\)?<!\\[CDATA\\[[ \t]*\n?"
-      :back "[ \t]*\\(//\\)?]]>[ \t\n]*</style>"
-      :insert ((?j js-tag nil @ "<style type=\"text/css\">"
-                   @ "\n" _ "\n" @ "</style>" @)))
-     (css
-      :submode css-mode
-      :face mmm-code-submode-face
-      :front "<style[^>]*>[ \t]*\n?"
-      :back "[ \t]*</style>"
-      :insert ((?j js-tag nil @ "<style type=\"text/css\">"
-                   @ "\n" _ "\n" @ "</style>" @)))
-     (css-inline
-      :submode css-mode
-      :face mmm-code-submode-face
-      :front "style=\""
-      :back "\"")
-     ;; javascript mode ----------------------------------------------------
-     (js-script-cdata
-      :submode js-mode
-      :face mmm-code-submode-face
-      :front "<script[^>]*>[ \t\n]*\\(//\\)?<!\\[CDATA\\[[ \t]*\n?"
-      :back "[ \t]*\\(//\\)?]]>[ \t\n]*</script>")
-     (js-script
-      :submode js-mode
-      :face mmm-code-submode-face
-      :front "<script[^>]*>[ \t]*\n?"
-      :back "[ \t]*</script>"
-      :insert ((?j js-tag nil @ "<script type=\"text/javascript\">\n"
-                   @ "" _ "" @ "\n</script>" @)))
-	))
-  (dolist (mode (list 'python-mode))
-    (mmm-add-mode-ext-class mode "\\.py\\'" 'embedded-html)))
+(when (maybe-require-package 'toml-mode)
+  (add-to-list 'auto-mode-alist '("poetry\\.lock\\'" . toml-mode)))
 
+(when (maybe-require-package 'reformatter)
+  (reformatter-define black :program "black"))
 
 (provide 'init-python)
 ;;; init-python.el ends here

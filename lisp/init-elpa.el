@@ -3,57 +3,32 @@
 ;;; Code:
 
 (require 'package)
+(require 'cl-lib)
 
 
 ;;; Install into separate package dirs for each Emacs version, to prevent bytecode incompatibility
-(let ((versioned-package-dir
-       (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
-                         user-emacs-directory)))
-  (when (file-directory-p package-user-dir)
-    (message "Default package locations have changed in this config: renaming old package dir %s to %s."
-             package-user-dir
-             versioned-package-dir)
-    (rename-file package-user-dir versioned-package-dir))
-  (setq package-user-dir versioned-package-dir))
+(setq package-user-dir
+      (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
+                        user-emacs-directory))
 
 
 
 ;;; Standard package repositories
 
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;; 改为清华大学仓库
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")) t)
-
-  ;; Official MELPA Mirror, in case necessary.
-  ;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
-  (if (< emacs-major-version 24)
-      ;; For important compatibility libraries like cl-lib
-      (add-to-list 'package-archives '("gnu" . (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-    (unless no-ssl
-      ;; Force SSL for GNU ELPA
-      (setcdr (assoc "gnu" package-archives) "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))))
-
-;; We include the org repository for completeness, but don't normally
-;; use it.
-;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))
-
-;; @Bailm
-;; (add-to-list 'package-archives '("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
-;; (add-to-list 'package-archives
-;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-;; need reomve melpa
-;; (add-to-list 'package-archives '("Shenzhen" . "http://elpa.popkit.org"))
+(add-to-list 'package-archives '( "melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+(add-to-list 'package-archives '( "gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
+;;; (add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
+;; Official MELPA Mirror, in case necessary.
+;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
 
 
 
-;;; On-demand installation of packages
+;; Work-around for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
+(when (and (version< emacs-version "26.3") (boundp 'libgnutls-version) (>= libgnutls-version 30604))
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-(require 'cl-lib)
+
+;;; On-demand installation of packages
 
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
@@ -61,13 +36,16 @@ If NO-REFRESH is non-nil, the available package lists will not be
 re-downloaded in order to locate PACKAGE."
   (or (package-installed-p package min-version)
       (let* ((known (cdr (assoc package package-archive-contents)))
-             (versions (mapcar #'package-desc-version known)))
-        (if (cl-find-if (lambda (v) (version-list-<= min-version v)) versions)
-            (package-install package)
+             (best (car (sort known (lambda (a b)
+                                      (version-list-<= (package-desc-version b)
+                                                       (package-desc-version a)))))))
+        (if (and best (version-list-<= min-version (package-desc-version best)))
+            (package-install best)
           (if no-refresh
               (error "No version of %s >= %S is available" package min-version)
             (package-refresh-contents)
-            (require-package package min-version t))))))
+            (require-package package min-version t)))
+        (package-installed-p package min-version))))
 
 (defun maybe-require-package (package &optional min-version no-refresh)
   "Try to install PACKAGE, and return non-nil if successful.
@@ -95,10 +73,14 @@ locate PACKAGE."
 (defvar sanityinc/required-packages nil)
 
 (defun sanityinc/note-selected-package (oldfun package &rest args)
-  "If OLDFUN reports PACKAGE was successfully installed, note it in `sanityinc/required-packages'."
+  "If OLDFUN reports PACKAGE was successfully installed, note that fact.
+The package name is noted by adding it to
+`sanityinc/required-packages'.  This function is used as an
+advice for `require-package', to which ARGS are passed."
   (let ((available (apply oldfun package args)))
-    (prog1 available
-      (when (and available (boundp 'package-selected-packages))
+    (prog1
+        available
+      (when available
         (add-to-list 'sanityinc/required-packages package)))))
 
 (advice-add 'require-package :around 'sanityinc/note-selected-package)
@@ -106,12 +88,17 @@ locate PACKAGE."
 (when (fboundp 'package--save-selected-packages)
   (require-package 'seq)
   (add-hook 'after-init-hook
-            (lambda () (package--save-selected-packages
-                   (seq-uniq (append sanityinc/required-packages package-selected-packages))))))
+            (lambda ()
+              (package--save-selected-packages
+               (seq-uniq (append sanityinc/required-packages package-selected-packages))))))
 
 
 (require-package 'fullframe)
 (fullframe list-packages quit-window)
+
+
+(let ((package-check-signature nil))
+  (require-package 'gnu-elpa-keyring-update))
 
 
 (defun sanityinc/set-tabulated-list-column-width (col-name width)
