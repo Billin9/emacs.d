@@ -2,13 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'slime)
-
-(when (maybe-require-package 'slime-company)
-  (setq slime-company-completion 'fuzzy
-        slime-company-after-completion 'slime-company-just-one-space)
-  (with-eval-after-load 'slime-company
-    (add-to-list 'company-backends 'company-slime)))
 
 
 ;;; Lisp buffers
@@ -16,10 +9,8 @@
 (with-eval-after-load 'slime
   (setq slime-protocol-version 'ignore)
   (setq slime-net-coding-system 'utf-8-unix)
-  (let ((features '(slime-fancy slime-repl slime-fuzzy)))
-    (when (require 'slime-company nil t)
-      (push 'slime-company features))
-    (slime-setup features)) )
+  (let ((features '(slime-fancy slime-repl slime-fuzzy slime-autodoc)))
+    (slime-setup features)))
 
 
 ;;; REPL

@@ -17,6 +17,7 @@ CVS
 cookies
 /newsticker
 \#*
+/tree-sitter
 /elpa
 /elpa-*
 site-lisp/package/
@@ -56,3 +57,5 @@ server
 /.lsp-session-v1
 /smex-items
 /eln-cache/
+/projects
+/forge-*.sqlite
